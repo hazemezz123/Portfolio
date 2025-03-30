@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
+  "buildCommand": "NEXT_TELEMETRY_DISABLED=1 NODE_OPTIONS='--openssl-legacy-provider' next build",
   "installCommand": "npm install",
   "framework": "nextjs",
   "outputDirectory": ".next",
@@ -8,7 +8,8 @@
   "env": {
     "MONGODB_URI": "${MONGODB_URI}",
     "NODE_ENV": "production",
-    "VERCEL": "1"
+    "VERCEL": "1",
+    "NEXT_TELEMETRY_DISABLED": "1"
   },
   "headers": [
     {

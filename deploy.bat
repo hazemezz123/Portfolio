@@ -23,6 +23,10 @@ if not exist .env.local (
     exit /b 1
 )
 
+REM Set environment variables for the build
+set NEXT_TELEMETRY_DISABLED=1
+set NODE_OPTIONS=--openssl-legacy-provider
+
 REM Build and test locally
 echo Running tests and build...
 call npm run lint
@@ -62,16 +66,16 @@ if %ERRORLEVEL% equ 0 (
     if /i "%PROD%"=="y" (
         echo Deploying to production...
         if /i "%CHECK_ENV%"=="y" (
-            call vercel --prod -e MONGODB_URI="%MONGODB_URI%" -e NEXT_PUBLIC_EMAILJS_SERVICE_ID="%EMAILJS_SERVICE_ID%" -e NEXT_PUBLIC_EMAILJS_TEMPLATE_ID="%EMAILJS_TEMPLATE_ID%" -e NEXT_PUBLIC_EMAILJS_PUBLIC_KEY="%EMAILJS_PUBLIC_KEY%"
+            call vercel --prod -e NEXT_TELEMETRY_DISABLED=1 -e MONGODB_URI="%MONGODB_URI%" -e NEXT_PUBLIC_EMAILJS_SERVICE_ID="%EMAILJS_SERVICE_ID%" -e NEXT_PUBLIC_EMAILJS_TEMPLATE_ID="%EMAILJS_TEMPLATE_ID%" -e NEXT_PUBLIC_EMAILJS_PUBLIC_KEY="%EMAILJS_PUBLIC_KEY%"
         ) else (
-            call vercel --prod
+            call vercel --prod -e NEXT_TELEMETRY_DISABLED=1
         )
     ) else (
         echo Deploying to preview environment...
         if /i "%CHECK_ENV%"=="y" (
-            call vercel -e MONGODB_URI="%MONGODB_URI%" -e NEXT_PUBLIC_EMAILJS_SERVICE_ID="%EMAILJS_SERVICE_ID%" -e NEXT_PUBLIC_EMAILJS_TEMPLATE_ID="%EMAILJS_TEMPLATE_ID%" -e NEXT_PUBLIC_EMAILJS_PUBLIC_KEY="%EMAILJS_PUBLIC_KEY%"
+            call vercel -e NEXT_TELEMETRY_DISABLED=1 -e MONGODB_URI="%MONGODB_URI%" -e NEXT_PUBLIC_EMAILJS_SERVICE_ID="%EMAILJS_SERVICE_ID%" -e NEXT_PUBLIC_EMAILJS_TEMPLATE_ID="%EMAILJS_TEMPLATE_ID%" -e NEXT_PUBLIC_EMAILJS_PUBLIC_KEY="%EMAILJS_PUBLIC_KEY%"
         ) else (
-            call vercel
+            call vercel -e NEXT_TELEMETRY_DISABLED=1
         )
     )
     
