@@ -74,3 +74,29 @@ Alternatively, you can connect your GitHub repository to Vercel for automatic de
 - Make sure your MongoDB connection is configured properly with network access for Vercel's IP ranges.
 - Test your API routes locally with `npm run dev` before deploying.
 - Check the Vercel deployment logs if you encounter issues.
+
+### Troubleshooting MongoDB Connection
+
+If you encounter the "Failed to load guestbook entries" error:
+
+1. **Check your MongoDB Connection String**
+
+   - Verify the connection string in your Vercel environment variables
+   - Make sure it includes the database name (e.g., `?retryWrites=true&w=majority`)
+   - Double-check username and password
+
+2. **Network Access in MongoDB Atlas**
+
+   - In MongoDB Atlas, go to Network Access
+   - Add `0.0.0.0/0` to allow connections from anywhere (for testing)
+   - Or add specific IP ranges for Vercel deployment regions
+
+3. **Vercel Logs**
+
+   - Check your Function Logs in the Vercel dashboard
+   - Look for MongoDB connection errors
+   - Verify the proper environment variables are set
+
+4. **Test Locally**
+   - Run `npm run dev` with a `.env.local` file
+   - Try connecting to your database locally first

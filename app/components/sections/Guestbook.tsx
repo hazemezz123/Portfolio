@@ -35,15 +35,36 @@ export default function Guestbook() {
 
     const fetchEntries = async () => {
       try {
+        setIsLoading(true);
+        setError(null);
+
         const response = await fetch("/api/guestbook");
+
         if (!response.ok) {
-          throw new Error("Failed to fetch guestbook entries");
+          const errorData = await response.json();
+          throw new Error(
+            errorData.error || "Failed to fetch guestbook entries"
+          );
         }
+
         const data = await response.json();
         setEntries(data.entries);
       } catch (error) {
         console.error("Error fetching guestbook entries:", error);
-        setError("Failed to load guestbook entries. Please try again later.");
+
+        // Check if the error is database-related
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        if (
+          errorMessage.includes("MongoDB") ||
+          errorMessage.includes("database")
+        ) {
+          setError(
+            "Database connection error. Please verify your MongoDB setup and make sure it's accessible from Vercel."
+          );
+        } else {
+          setError("Failed to load guestbook entries. Please try again later.");
+        }
       } finally {
         setIsLoading(false);
       }
@@ -142,7 +163,10 @@ export default function Guestbook() {
 
           {error && (
             <div className="mb-8 p-4 bg-red-500 text-white text-center">
-              {error}
+              <p className="font-bold">{error}</p>
+              <p className="text-sm mt-2">
+                If this error persists, please contact the administrator.
+              </p>
             </div>
           )}
 
