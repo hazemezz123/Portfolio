@@ -1,4 +1,4 @@
-import mongoose, { Schema, models } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 // Define the Guestbook entry interface
 export interface IGuestbookEntry {
@@ -44,10 +44,6 @@ const GuestbookEntrySchema = new Schema<IGuestbookEntry>(
   }
 );
 
-// Check if the model exists before creating a new one
-// This prevents model recompilation errors in development mode
-const GuestbookEntry =
-  models.GuestbookEntry ||
+// Check if the model already exists to prevent recompilation error during hot reloading
+export default mongoose.models.GuestbookEntry ||
   mongoose.model<IGuestbookEntry>("GuestbookEntry", GuestbookEntrySchema);
-
-export default GuestbookEntry;

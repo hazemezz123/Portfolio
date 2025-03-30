@@ -24,10 +24,6 @@ if [ ! -f .env.local ]; then
     exit 1
 fi
 
-# Set environment variables for the build
-export NEXT_TELEMETRY_DISABLED=1
-export NODE_OPTIONS='--openssl-legacy-provider'
-
 # Build and test locally
 echo "🔍 Running tests and build..."
 npm run lint
@@ -68,25 +64,23 @@ if [ $? -eq 0 ]; then
         echo "🚀 Deploying to production..."
         if [ "$CHECK_ENV" = "y" ]; then
             vercel --prod \
-            -e NEXT_TELEMETRY_DISABLED=1 \
             -e MONGODB_URI="$MONGODB_URI" \
             -e NEXT_PUBLIC_EMAILJS_SERVICE_ID="$EMAILJS_SERVICE_ID" \
             -e NEXT_PUBLIC_EMAILJS_TEMPLATE_ID="$EMAILJS_TEMPLATE_ID" \
             -e NEXT_PUBLIC_EMAILJS_PUBLIC_KEY="$EMAILJS_PUBLIC_KEY"
         else
-            vercel --prod -e NEXT_TELEMETRY_DISABLED=1
+            vercel --prod
         fi
     else
         echo "🧪 Deploying to preview environment..."
         if [ "$CHECK_ENV" = "y" ]; then
             vercel \
-            -e NEXT_TELEMETRY_DISABLED=1 \
             -e MONGODB_URI="$MONGODB_URI" \
             -e NEXT_PUBLIC_EMAILJS_SERVICE_ID="$EMAILJS_SERVICE_ID" \
             -e NEXT_PUBLIC_EMAILJS_TEMPLATE_ID="$EMAILJS_TEMPLATE_ID" \
             -e NEXT_PUBLIC_EMAILJS_PUBLIC_KEY="$EMAILJS_PUBLIC_KEY"
         else
-            vercel -e NEXT_TELEMETRY_DISABLED=1
+            vercel
         fi
     fi
     

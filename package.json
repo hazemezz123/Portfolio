@@ -3,37 +3,36 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "NEXT_TELEMETRY_DISABLED=1 NODE_OPTIONS='--openssl-legacy-provider' next build",
+    "dev": "next dev --turbopack",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "deploy": "deploy.bat",
-    "deploy:unix": "bash ./deploy.sh",
-    "vercel-build": "npm i postcss autoprefixer tailwindcss@3.3.0 --no-save && npm run build"
+    "deploy:unix": "bash ./deploy.sh"
   },
   "dependencies": {
     "@emailjs/browser": "^4.1.0",
     "@vercel/postgres": "^0.10.0",
-    "autoprefixer": "^10.4.14",
+    "emailjs-com": "^3.2.0",
     "framer-motion": "^11.18.2",
     "i18next": "^23.10.0",
     "mongoose": "^8.13.1",
     "next": "15.2.4",
-    "postcss": "^8.4.23",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-i18next": "^14.0.5",
     "react-type-animation": "^3.2.0",
-    "tailwindcss": "^3.3.0",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.2.4",
+    "tailwindcss": "^4",
     "typescript": "^5"
   }
 }
