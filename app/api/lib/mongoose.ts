@@ -34,8 +34,37 @@ async function dbConnect() {
   }
 
   try {
+    // Clean and normalize the MongoDB URI
+    // This helps with potential encoding issues in environment variables
+    let cleanURI = MONGODB_URI;
+
+    // Handle URL-encoded characters in the connection string
+    // This is especially important for passwords with special characters
+    if (MONGODB_URI.includes("%")) {
+      try {
+        // Extract parts of the URI to handle them separately
+        const [protocol, rest] = MONGODB_URI.split("://");
+        const [credentials, hostAndPath] = rest.split("@");
+
+        if (credentials && credentials.includes(":")) {
+          // Decode username and password if they're URL encoded
+          const [username, password] = credentials.split(":");
+          const decodedUsername = decodeURIComponent(username);
+          const decodedPassword = decodeURIComponent(password);
+
+          // Rebuild the connection string with decoded parts
+          cleanURI = `${protocol}://${decodedUsername}:${decodedPassword}@${hostAndPath}`;
+          console.log(
+            "Connection string was URL-encoded, and has been normalized"
+          );
+        }
+      } catch (parseError) {
+        console.warn("Failed to parse MongoDB URI, using as-is:", parseError);
+      }
+    }
+
     // Log the connection attempt (without exposing the full connection string)
-    const maskedURI = MONGODB_URI.replace(
+    const maskedURI = cleanURI.replace(
       /(mongodb(\+srv)?:\/\/)[^:]+:[^@]+@/,
       "$1****:****@"
     );
@@ -43,12 +72,12 @@ async function dbConnect() {
 
     // Configure connection options
     const options = {
-      serverSelectionTimeoutMS: 5000, // Timeout after 5s
-      connectTimeoutMS: 10000, // Give up initial connection after 10s
+      serverSelectionTimeoutMS: 30000, // Increased timeout to 30s
+      connectTimeoutMS: 30000, // Increased timeout to 30s
       socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
     };
 
-    await mongoose.connect(MONGODB_URI, options);
+    await mongoose.connect(cleanURI, options);
     isConnected = true;
     console.log("MongoDB connected successfully");
   } catch (error) {
@@ -69,6 +98,10 @@ async function dbConnect() {
       } else if (error.name === "MongoServerSelectionError") {
         console.error(
           "Server selection error - check if your MongoDB cluster is running"
+        );
+      } else if (error.name === "MongoParseError") {
+        console.error(
+          "Parse error - check your MongoDB connection string format"
         );
       }
     }

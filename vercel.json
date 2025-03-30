@@ -6,7 +6,9 @@
   "outputDirectory": ".next",
   "regions": ["fra1"],
   "env": {
-    "MONGODB_URI": "${MONGODB_URI}"
+    "MONGODB_URI": "${MONGODB_URI}",
+    "NODE_ENV": "production",
+    "VERCEL": "1"
   },
   "headers": [
     {
