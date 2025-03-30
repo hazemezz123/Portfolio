@@ -1,26 +1,356 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #121212;
+  --foreground: #e0e0e0;
+  --primary: #00ff00;
+  --secondary: #ff00ff;
+  --accent: #0088ff;
+
+  --retro-beige: #f5f5dc;
+  --retro-gray: #333333;
+  --retro-blue: #0000ee;
+  --retro-purple: #800080;
+  --retro-green: #008000;
+  --retro-yellow: #ffcc00;
+  --retro-orange: #ff6600;
+  --retro-border: #666666;
+
+  --neon-glow: 0 0 5px rgba(0, 255, 0, 0.5), 0 0 10px rgba(0, 255, 0, 0.3);
+  --neon-glow-pink: 0 0 5px rgba(255, 0, 255, 0.5),
+    0 0 10px rgba(255, 0, 255, 0.3);
+  --neon-glow-blue: 0 0 5px rgba(0, 136, 255, 0.5),
+    0 0 10px rgba(0, 136, 255, 0.3);
+  --pixel-border: 3px solid var(--retro-gray);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+body {
+  background: var(--retro-beige);
+  color: var(--retro-gray);
+  font-family: "Courier New", Courier, monospace;
+  overflow-x: hidden;
+}
+
+@keyframes glitch {
+  0% {
+    text-shadow: 0.05em 0 0 var(--retro-blue),
+      -0.05em -0.025em 0 var(--retro-purple);
+    transform: translate(-0.025em, 0.025em);
+  }
+  14% {
+    text-shadow: 0.05em 0 0 var(--retro-blue),
+      -0.05em -0.025em 0 var(--retro-purple);
+    transform: translate(-0.025em, 0.025em);
+  }
+  15% {
+    text-shadow: -0.05em -0.025em 0 var(--retro-blue),
+      0.025em 0.025em 0 var(--retro-purple);
+    transform: translate(0.025em, -0.025em);
+  }
+  49% {
+    text-shadow: -0.05em -0.025em 0 var(--retro-blue),
+      0.025em 0.025em 0 var(--retro-purple);
+    transform: translate(0.025em, -0.025em);
+  }
+  50% {
+    text-shadow: 0.025em 0.05em 0 var(--retro-blue),
+      0.05em 0 0 var(--retro-purple);
+    transform: translate(-0.025em, -0.025em);
+  }
+  99% {
+    text-shadow: 0.025em 0.05em 0 var(--retro-blue),
+      0.05em 0 0 var(--retro-purple);
+    transform: translate(-0.025em, -0.025em);
+  }
+  100% {
+    text-shadow: -0.025em 0 0 var(--retro-blue),
+      -0.025em -0.025em 0 var(--retro-purple);
+    transform: translate(0.025em, 0.025em);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.neon-text {
+  color: var(--primary);
+  text-shadow: var(--neon-glow);
+}
+
+.neon-text-pink {
+  color: var(--secondary);
+  text-shadow: var(--neon-glow-pink);
+}
+
+.neon-text-blue {
+  color: var(--accent);
+  text-shadow: var(--neon-glow-blue);
+}
+
+.neon-border {
+  border: 2px solid var(--primary);
+  box-shadow: var(--neon-glow);
+}
+
+.neon-border-pink {
+  border: 2px solid var(--secondary);
+  box-shadow: var(--neon-glow-pink);
+}
+
+.glitch-text {
+  animation: glitch 3s infinite;
+}
+
+.glassmorphism {
+  background: rgba(10, 10, 10, 0.5);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Retro web styling */
+.retro-container {
+  border: var(--pixel-border);
+  background: var(--retro-beige);
+  color: var(--retro-gray);
+  padding: 15px;
+  box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.5);
+}
+
+.retro-header {
+  background: var(--retro-gray);
+  color: white;
+  font-weight: bold;
+  padding: 8px 15px;
+  text-align: center;
+  border: var(--pixel-border);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.retro-button {
+  background: var(--retro-gray);
+  color: white;
+  border: 3px outset #666;
+  padding: 5px 15px;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.retro-button:hover {
+  background: var(--retro-blue);
+}
+
+.retro-button:active {
+  border-style: inset;
+}
+
+.retro-input {
+  background: white;
+  border: 2px inset #999;
+  padding: 5px;
+  font-family: "Courier New", Courier, monospace;
+}
+
+.retro-link {
+  color: var(--retro-blue);
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.retro-link:visited {
+  color: var(--retro-purple);
+}
+
+.retro-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.retro-table td,
+.retro-table th {
+  border: 1px solid #999;
+  padding: 5px;
+}
+
+.retro-table th {
+  background-color: #ccc;
+  font-weight: bold;
+}
+
+.pixelated {
+  image-rendering: pixelated;
+}
+
+/* Retro dividers and decorations */
+.retro-divider {
+  height: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--retro-gray),
+    var(--retro-gray) 8px,
+    transparent 8px,
+    transparent 16px
+  );
+  margin: 20px 0;
+}
+
+.dotted-bg {
+  background-image: radial-gradient(
+    var(--retro-gray) 1.5px,
+    var(--retro-beige) 1.5px
+  );
+  background-size: 16px 16px;
+  background-position: 0 0;
+}
+
+.checkerboard-bg {
+  background-image: linear-gradient(45deg, #ccc 25%, transparent 25%),
+    linear-gradient(-45deg, #ccc 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #ccc 75%),
+    linear-gradient(-45deg, transparent 75%, #ccc 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}
+
+.marquee-container {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  border-top: 2px solid var(--retro-gray);
+  border-bottom: 2px solid var(--retro-gray);
+  padding: 5px 0;
+  margin: 10px 0;
+}
+
+.marquee-content {
+  display: inline-block;
+  animation: marquee 15s linear infinite;
+  padding: 0 20px;
+}
+
+.blink {
+  animation: blink 1s step-end infinite;
+}
+
+.scanline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  animation: scanline 8s linear infinite;
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* Parallax effects */
+.parallax {
+  position: relative;
+  overflow: hidden;
+}
+
+.parallax-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  will-change: transform;
+}
+
+.parallax-base {
+  transform: translateZ(0);
+  z-index: 4;
+}
+
+.parallax-back {
+  transform: translateZ(-1px) scale(2);
+  z-index: 1;
+}
+
+.parallax-mid {
+  transform: translateZ(-0.5px) scale(1.5);
+  z-index: 2;
+}
+
+.parallax-front {
+  transform: translateZ(0.5px) scale(0.5);
+  z-index: 5;
+}
+
+/* For scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--retro-beige);
+  border: 1px solid #999;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--retro-gray);
+  border: 1px outset #666;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--retro-blue);
+}
+
+/* Add loading spinner for retro style */
+.retro-loading {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #000;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
