@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "NEXT_TELEMETRY_DISABLED=1 NODE_OPTIONS='--openssl-legacy-provider' next build",
+  "buildCommand": "npm run vercel-build",
   "installCommand": "npm install",
   "framework": "nextjs",
   "outputDirectory": ".next",
