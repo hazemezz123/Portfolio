@@ -50,7 +50,8 @@ The easiest way to deploy your Next.js app with backend API routes is to use [Ve
 3. **Set up environment variables**
 
    - Create a new project in the Vercel dashboard
-   - Add the required environment variables:
+   - Go to your project settings → Environment Variables
+   - Add the required environment variables directly:
      - `MONGODB_URI`: Your MongoDB connection string
      - `NEXT_PUBLIC_EMAILJS_SERVICE_ID`: EmailJS service ID
      - `NEXT_PUBLIC_EMAILJS_TEMPLATE_ID`: EmailJS template ID

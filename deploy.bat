@@ -32,15 +32,47 @@ REM Check if build was successful
 if %ERRORLEVEL% equ 0 (
     echo Build successful!
     
+    REM Prompt for environment variables if needed
+    echo.
+    echo Checking environment variables...
+    set /p CHECK_ENV="Do you need to set environment variables for Vercel? (y/n): "
+    
+    if /i "%CHECK_ENV%"=="y" (
+        echo.
+        echo Enter your MongoDB URI:
+        set /p MONGODB_URI=
+        
+        echo Enter your EmailJS Service ID:
+        set /p EMAILJS_SERVICE_ID=
+        
+        echo Enter your EmailJS Template ID:
+        set /p EMAILJS_TEMPLATE_ID=
+        
+        echo Enter your EmailJS Public Key:
+        set /p EMAILJS_PUBLIC_KEY=
+        
+        echo.
+        echo These variables will be set during deployment.
+    )
+    
     REM Ask if user wants to deploy to production
+    echo.
     set /p PROD="Deploy to production? (y/n): "
     
     if /i "%PROD%"=="y" (
         echo Deploying to production...
-        call vercel --prod
+        if /i "%CHECK_ENV%"=="y" (
+            call vercel --prod -e MONGODB_URI="%MONGODB_URI%" -e NEXT_PUBLIC_EMAILJS_SERVICE_ID="%EMAILJS_SERVICE_ID%" -e NEXT_PUBLIC_EMAILJS_TEMPLATE_ID="%EMAILJS_TEMPLATE_ID%" -e NEXT_PUBLIC_EMAILJS_PUBLIC_KEY="%EMAILJS_PUBLIC_KEY%"
+        ) else (
+            call vercel --prod
+        )
     ) else (
         echo Deploying to preview environment...
-        call vercel
+        if /i "%CHECK_ENV%"=="y" (
+            call vercel -e MONGODB_URI="%MONGODB_URI%" -e NEXT_PUBLIC_EMAILJS_SERVICE_ID="%EMAILJS_SERVICE_ID%" -e NEXT_PUBLIC_EMAILJS_TEMPLATE_ID="%EMAILJS_TEMPLATE_ID%" -e NEXT_PUBLIC_EMAILJS_PUBLIC_KEY="%EMAILJS_PUBLIC_KEY%"
+        ) else (
+            call vercel
+        )
     )
     
     echo Deployment process completed!
