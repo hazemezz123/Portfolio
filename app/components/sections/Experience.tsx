@@ -37,14 +37,31 @@ const experiences = [
 export default function Experience() {
   const [scrollY, setScrollY] = useState(0);
   const [activeItem, setActiveItem] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    // Handle scroll for parallax effect
     const handleScroll = () => {
       setScrollY(window.scrollY);
     };
 
+    // Check if mobile on initial load and resize
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    // Initialize mobile check
+    checkMobile();
+
+    // Add event listeners
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("resize", checkMobile);
+
+    // Clean up event listeners
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", checkMobile);
+    };
   }, []);
 
   return (
@@ -66,13 +83,26 @@ export default function Experience() {
         <div className="relative overflow-hidden">
           <div className="scanline" style={{ opacity: 0.3 }}></div>
           <div
-            className="absolute left-1/2 top-0 bottom-0 w-1 bg-retro-gray"
+            className={`absolute left-1/2 top-0 bottom-0 w-1 bg-retro-gray ${
+              isMobile ? "hidden md:block" : ""
+            }`}
             style={{
               transform: "translateX(-50%)",
               backgroundImage:
                 "repeating-linear-gradient(0deg, transparent, transparent 10px, var(--retro-blue) 10px, var(--retro-blue) 20px)",
             }}
           ></div>
+
+          {/* Mobile timeline line (vertical centered) */}
+          {isMobile && (
+            <div
+              className="absolute left-8 top-0 bottom-0 w-1 bg-retro-gray md:hidden"
+              style={{
+                backgroundImage:
+                  "repeating-linear-gradient(0deg, transparent, transparent 10px, var(--retro-blue) 10px, var(--retro-blue) 20px)",
+              }}
+            ></div>
+          )}
 
           <div className="relative z-10">
             {experiences.map((exp, index) => (
@@ -83,16 +113,20 @@ export default function Experience() {
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className={`mb-16 relative ${
-                  index % 2 === 0
-                    ? "text-right mr-auto ml-0"
-                    : "text-left ml-auto mr-0"
+                  isMobile
+                    ? "ml-0 mr-0 pl-16 text-left" // Mobile: all cards on right side of vertical line
+                    : index % 2 === 0
+                    ? "text-right mr-auto ml-0" // Desktop: even cards on left
+                    : "text-left ml-auto mr-0" // Desktop: odd cards on right
                 }`}
                 style={{
-                  width: "calc(50% - 20px)",
+                  width: isMobile ? "100%" : "calc(50% - 20px)",
                   marginTop: index === 0 ? "0" : "-20px",
-                  transform: `translateY(${
-                    scrollY * 0.02 * (index % 2 === 0 ? -1 : 1)
-                  }px)`,
+                  transform: !isMobile
+                    ? `translateY(${
+                        scrollY * 0.02 * (index % 2 === 0 ? -1 : 1)
+                      }px)`
+                    : "none", // Disable parallax on mobile
                 }}
                 onMouseEnter={() => setActiveItem(index)}
                 onMouseLeave={() => setActiveItem(null)}
@@ -104,16 +138,32 @@ export default function Experience() {
                       : ""
                   }`}
                 >
-                  <div
-                    className={`absolute top-1/2 ${
-                      index % 2 === 0 ? "left-full" : "right-full"
-                    } w-5 h-1 bg-retro-gray`}
-                    style={{ transform: "translateY(-50%)" }}
-                  ></div>
+                  {/* Desktop connector lines */}
+                  {!isMobile && (
+                    <div
+                      className={`absolute top-1/2 ${
+                        index % 2 === 0 ? "left-full" : "right-full"
+                      } w-5 h-1 bg-retro-gray`}
+                      style={{ transform: "translateY(-50%)" }}
+                    ></div>
+                  )}
 
+                  {/* Mobile connector line (always on left) */}
+                  {isMobile && (
+                    <div
+                      className="absolute top-1/2 left-[-14px] w-5 h-1 bg-retro-gray md:hidden"
+                      style={{ transform: "translateY(-50%)" }}
+                    ></div>
+                  )}
+
+                  {/* Timeline dot/point */}
                   <div
                     className={`absolute ${
-                      index % 2 === 0 ? "left-full ml-4" : "right-full mr-4"
+                      isMobile
+                        ? "left-[-20px] md:hidden" // Mobile: dot on left
+                        : index % 2 === 0
+                        ? "left-full ml-4" // Desktop: even cards dot on right
+                        : "right-full mr-4" // Desktop: odd cards dot on left
                     } top-1/2 transform -translate-y-1/2 w-3 h-3 retro-container p-0 border-2 ${
                       activeItem === index
                         ? "border-retro-blue bg-retro-yellow"
