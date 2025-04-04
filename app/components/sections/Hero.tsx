@@ -205,7 +205,7 @@ export default function Hero() {
         </div>
       </div>
 
-      <div className="absolute right-10 bottom-10">
+      <div className="absolute right-10 bottom-10 hidden sm:block">
         <div className="retro-container px-2 py-1">
           <span className="text-retro-blue font-mono text-sm blink">▮</span>
         </div>

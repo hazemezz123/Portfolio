@@ -125,7 +125,7 @@ export default function Experience() {
                 onMouseLeave={() => setActiveItem(null)}
               >
                 <div
-                  className={`retro-container relative ${
+                  className={`retro-container relative p-4 md:p-6 ${
                     activeItem === index
                       ? "bg-retro-beige border-retro-blue"
                       : ""
@@ -153,7 +153,7 @@ export default function Experience() {
                   <div
                     className={`absolute ${
                       isMobile
-                        ? "left-[-20px] md:hidden" // Mobile: dot on left
+                        ? "hidden" // Hide completely on mobile
                         : index % 2 === 0
                         ? "left-full ml-4" // Desktop: even cards dot on right
                         : "right-full mr-4" // Desktop: odd cards dot on left
@@ -185,10 +185,22 @@ export default function Experience() {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="mt-16 text-center"
         >
-          <div className="retro-container inline-block mx-auto">
+          <div className="hidden md:inline-block retro-container mx-auto">
             <div className="font-mono">
               <div className="mb-2">
                 &gt; <span className="text-retro-blue">resume.exe</span>
+              </div>
+              <div className="text-retro-green blink">
+                Download my full resume
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile version of resume button without retro container */}
+          <div className="md:hidden inline-block mx-auto">
+            <div className="font-mono">
+              <div className="mb-2">
+                <span className="text-retro-blue">resume.exe</span>
               </div>
               <div className="text-retro-green blink">
                 Download my full resume
