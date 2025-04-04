@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Gaming Dev Portfolio",
+  title: "Hazem's Portfolio",
   description:
     "A high-performance gamer-themed developer portfolio showcasing my skills and projects",
   authors: [{ name: "Hazem Ezz" }],
