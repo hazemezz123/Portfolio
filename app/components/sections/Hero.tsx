@@ -50,21 +50,21 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative pt-36 pb-20 md:pt-40 md:pb-32 overflow-hidden min-h-screen flex items-center dotted-bg"
+      className="relative pt-24 sm:pt-36 pb-16 sm:pb-20 md:pt-40 md:pb-32 overflow-hidden min-h-screen flex items-center dotted-bg"
     >
       <div className="scanline"></div>
 
       <div className="container px-4 mx-auto relative z-10">
         <div className="retro-container">
           <div className="flex flex-col md:flex-row items-center justify-between">
-            <div className="w-full md:w-1/2 mb-12 md:mb-0">
+            <div className="w-full md:w-1/2 mb-8 md:mb-0">
               <m.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="retro-header inline-block mb-2 px-4 py-2"
+                className="retro-header inline-block mb-2 px-3 sm:px-4 py-1 sm:py-2"
               >
-                <h2 className="text-lg font-bold text-white">
+                <h2 className="text-sm sm:text-lg font-bold text-white">
                   Hello, World! I&apos;m
                 </h2>
               </m.div>
@@ -73,7 +73,7 @@ export default function Hero() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="text-4xl md:text-6xl font-bold mb-4"
+                className="text-3xl sm:text-4xl md:text-6xl font-bold mb-3 sm:mb-4"
               >
                 <span className="text-retro-purple">Hazem</span>
                 <span className="text-retro-gray"> Ezz</span>
@@ -83,7 +83,7 @@ export default function Hero() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="text-xl md:text-2xl font-bold mb-6 h-12"
+                className="text-lg sm:text-xl md:text-2xl font-bold mb-4 sm:mb-6 h-10 sm:h-12"
               >
                 <TypeAnimation
                   sequence={[
@@ -112,7 +112,7 @@ export default function Hero() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
-                className="text-retro-gray text-base mb-8 max-w-lg border-l-4 border-retro-green pl-4"
+                className="text-retro-gray text-sm sm:text-base mb-6 sm:mb-8 max-w-lg border-l-4 border-retro-green pl-4"
               >
                 Welcome to my digital playground! I craft web experiences that
                 blend creativity with functionality. Let&apos;s build something
@@ -123,15 +123,15 @@ export default function Hero() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.4 }}
-                className="flex flex-wrap gap-4"
+                className="flex flex-wrap gap-3 sm:gap-4"
               >
                 <Link href="#contact">
-                  <button className="retro-button font-bold text-white px-6 py-3">
+                  <button className="retro-button font-bold text-white px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base">
                     Get in Touch
                   </button>
                 </Link>
                 <Link href="#projects">
-                  <button className="retro-button font-bold text-white px-6 py-3">
+                  <button className="retro-button font-bold text-white px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base">
                     View Projects
                   </button>
                 </Link>
@@ -214,10 +214,10 @@ export default function Hero() {
 
                   <div className="retro-glitch-effect"></div>
 
-                  {/* Click instruction label */}
+                  {/* Click instruction label - smaller on mobile */}
                   <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 z-40">
-                    <div className="retro-container bg-retro-gray px-1 py-0.5">
-                      <span className="font-mono text-retro-beige text-[10px]">
+                    <div className="retro-container bg-retro-gray px-1 py-0.5 scale-75 sm:scale-90">
+                      <span className="font-mono text-retro-beige text-[8px] sm:text-[10px] whitespace-nowrap">
                         CLICK TO CHANGE
                       </span>
                     </div>
@@ -231,9 +231,9 @@ export default function Hero() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 5 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute -top-14 left-1/2 transform -translate-x-1/2 z-40"
+                        className="absolute -top-10 sm:-top-14 left-1/2 transform -translate-x-1/2 z-40"
                       >
-                        <div className="retro-container bg-retro-purple px-3 py-2 text-sm whitespace-nowrap">
+                        <div className="retro-container bg-retro-purple px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm whitespace-nowrap scale-75 sm:scale-100">
                           <span className="font-mono text-white">
                             {showRealImage ? "REALITY MODE!" : "PIXEL MODE!"}
                           </span>
