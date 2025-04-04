@@ -7,7 +7,7 @@ A retro-themed portfolio website built with Next.js, Tailwind CSS, and Framer Mo
 - **Framework**: [Next.js 15](https://nextjs.org/)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 - **Animations**: [Framer Motion](https://www.framer.com/motion/)
-- **Database**: [MongoDB](https://www.mongodb.com/) (for Guestbook)
+- **Database**: [Supabase](https://supabase.com/) (for Guestbook)
 - **Email**: [EmailJS](https://www.emailjs.com/) (for Contact Form)
 
 ## EmailJS Setup
@@ -38,7 +38,7 @@ To set up the contact form with EmailJS:
 ### Prerequisites
 
 - A [Vercel](https://vercel.com/) account
-- A [MongoDB](https://www.mongodb.com/) database
+- A [Supabase](https://supabase.com/) project
 - [EmailJS](https://www.emailjs.com/) credentials (for contact form)
 
 ### Steps to Deploy
@@ -58,7 +58,8 @@ To set up the contact form with EmailJS:
 3. **Environment Variables**
 
    - Add the following environment variables in Vercel's project settings:
-     - `MONGODB_URI`: Your MongoDB connection string
+     - `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase project URL
+     - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase anonymous key
      - `NEXT_PUBLIC_EMAILJS_SERVICE_ID`: Your EmailJS service ID
      - `NEXT_PUBLIC_EMAILJS_TEMPLATE_ID`: Your EmailJS template ID
      - `NEXT_PUBLIC_EMAILJS_PUBLIC_KEY`: Your EmailJS public key
@@ -106,8 +107,9 @@ npm run start
 Create a `.env.local` file in the root directory with the following variables:
 
 ```
-# MongoDB Connection String (Required for Guestbook functionality)
-MONGODB_URI=your_mongodb_connection_string
+# Supabase Configuration (Required for Guestbook functionality)
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 
 # EmailJS Configuration (Required for Contact form functionality)
 NEXT_PUBLIC_EMAILJS_SERVICE_ID=your_service_id
