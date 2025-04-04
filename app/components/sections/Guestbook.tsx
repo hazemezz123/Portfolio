@@ -24,14 +24,20 @@ export default function Guestbook() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [currentDate, setCurrentDate] = useState<string>("");
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Handle client-side only mounting
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Fetch guestbook entries when the component mounts
   useEffect(() => {
+    // Don't fetch until component is mounted on client
+    if (!isMounted) return;
+
     // Set current date safely on client-side only
     setCurrentDate(new Date().toISOString().split("T")[0]);
-
-    // Skip during SSR
-    if (typeof window === "undefined") return;
 
     const fetchEntries = async () => {
       setIsLoading(true);
@@ -82,7 +88,27 @@ export default function Guestbook() {
     };
 
     fetchEntries();
-  }, []);
+  }, [isMounted]);
+
+  // Don't render anything during SSR or until client-side hydration
+  if (!isMounted) {
+    return (
+      <section id="guestbook" className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="retro-header inline-block text-3xl font-bold mb-4 px-6 py-2">
+              <span className="text-retro-gray">GUEST</span>
+              <span className="text-retro-purple">BOOK</span>
+            </h2>
+            <div className="w-24 h-1 bg-black mx-auto"></div>
+          </div>
+          <div className="retro-container">
+            <div className="text-center p-8">Loading guestbook...</div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   // Add a retry function
   const handleRetry = async () => {
