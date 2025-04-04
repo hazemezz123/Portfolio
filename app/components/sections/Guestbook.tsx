@@ -2,7 +2,7 @@
 
 import { m, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
-import { supabase, GuestbookEntry as SupabaseEntry } from "../../lib/supabase";
+import { supabase } from "../../lib/supabase";
 
 // Define the GuestbookEntry interface
 interface GuestbookEntry {
@@ -89,44 +89,43 @@ export default function Guestbook() {
   }, []);
 
   // Add a retry function
-  const handleRetry = () => {
+  const handleRetry = async () => {
     setIsLoading(true);
     setError(null);
 
-    // Call Supabase directly
-    supabase
-      .from("guestbook")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(20)
-      .then(({ data, error: supabaseError }) => {
-        if (supabaseError) {
-          throw new Error(
-            "Error fetching from Supabase: " + supabaseError.message
-          );
-        }
+    try {
+      // Call Supabase directly
+      const { data, error: supabaseError } = await supabase
+        .from("guestbook")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(20);
 
-        // Map the data to our GuestbookEntry interface
-        const formattedEntries =
-          data?.map((entry) => ({
-            id: entry.id,
-            name: entry.name,
-            email: entry.email,
-            message: entry.message,
-            location: entry.location,
-            created_at: entry.created_at,
-          })) || [];
+      if (supabaseError) {
+        throw new Error(
+          "Error fetching from Supabase: " + supabaseError.message
+        );
+      }
 
-        setEntries(formattedEntries);
-      })
-      .catch((error) => {
-        console.error("Error retrying guestbook fetch:", error);
-        setError("Failed to load guestbook entries. Please try again later.");
-        setEntries([]);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+      // Map the data to our GuestbookEntry interface
+      const formattedEntries =
+        data?.map((entry) => ({
+          id: entry.id,
+          name: entry.name,
+          email: entry.email,
+          message: entry.message,
+          location: entry.location,
+          created_at: entry.created_at,
+        })) || [];
+
+      setEntries(formattedEntries);
+    } catch (error: unknown) {
+      console.error("Error retrying guestbook fetch:", error);
+      setError("Failed to load guestbook entries. Please try again later.");
+      setEntries([]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleChange = (
