@@ -23,7 +23,7 @@ async function dbConnect() {
 
   // Skip MongoDB connection if no URI is provided
   if (!MONGODB_URI) {
-    return;
+    throw new Error("MongoDB URI is not defined");
   }
 
   // Prevent multiple connections in development mode
@@ -33,10 +33,23 @@ async function dbConnect() {
   }
 
   try {
-    await mongoose.connect(MONGODB_URI);
+    // Connection options optimized for serverless environments
+    const opts: mongoose.ConnectOptions = {
+      serverSelectionTimeoutMS: 5000, // Timeout for server selection
+      socketTimeoutMS: 10000, // Timeout for operations
+      connectTimeoutMS: 5000, // Timeout for initial connection
+      maxPoolSize: 10, // Maximum number of connections in pool
+      minPoolSize: 1, // Minimum number of connections in pool
+      maxIdleTimeMS: 60000, // Maximum time a connection can be idle before being closed
+      compressors: "zlib", // Compress data sent between the driver and MongoDB
+      retryWrites: true, // Retry write operations when they fail
+    };
+
+    await mongoose.connect(MONGODB_URI, opts);
     isConnected = true;
   } catch (error) {
     console.error("MongoDB connection error:", error);
+    throw new Error("Could not connect to MongoDB");
   }
 }
 

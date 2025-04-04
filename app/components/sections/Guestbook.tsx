@@ -34,16 +34,45 @@ export default function Guestbook() {
     setCurrentDate(new Date().toISOString().split("T")[0]);
 
     const fetchEntries = async () => {
+      setIsLoading(true);
+      setError(null);
+
       try {
-        const response = await fetch("/api/guestbook");
-        if (!response.ok) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+        const response = await fetch("/api/guestbook", {
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok && response.status !== 200) {
           throw new Error("Failed to fetch guestbook entries");
         }
+
         const data = await response.json();
-        setEntries(data.entries);
-      } catch (error) {
+
+        if (data.connectionIssue) {
+          setError(
+            data.error ||
+              "There was an issue connecting to the database. Please try again later."
+          );
+          setEntries([]);
+        } else {
+          setEntries(data.entries || []);
+        }
+      } catch (error: any) {
         console.error("Error fetching guestbook entries:", error);
-        setError("Failed to load guestbook entries. Please try again later.");
+
+        // Different error message for abort/timeout
+        if (error.name === "AbortError") {
+          setError("Request timed out. The server took too long to respond.");
+        } else {
+          setError("Failed to load guestbook entries. Please try again later.");
+        }
+
+        setEntries([]);
       } finally {
         setIsLoading(false);
       }
@@ -51,6 +80,39 @@ export default function Guestbook() {
 
     fetchEntries();
   }, []);
+
+  // Add a retry function
+  const handleRetry = () => {
+    setIsLoading(true);
+    setError(null);
+
+    fetch("/api/guestbook")
+      .then((response) => {
+        if (!response.ok && response.status !== 200) {
+          throw new Error("Failed to fetch guestbook entries");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.connectionIssue) {
+          setError(
+            data.error ||
+              "There was an issue connecting to the database. Please try again later."
+          );
+          setEntries([]);
+        } else {
+          setEntries(data.entries || []);
+        }
+      })
+      .catch((error) => {
+        console.error("Error retrying guestbook fetch:", error);
+        setError("Failed to load guestbook entries. Please try again later.");
+        setEntries([]);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -142,7 +204,14 @@ export default function Guestbook() {
 
           {error && (
             <div className="mb-8 p-4 bg-red-500 text-white text-center">
-              {error}
+              <p>{error}</p>
+              <button
+                onClick={handleRetry}
+                className="mt-2 px-4 py-2 retro-button bg-retro-gray text-white"
+                disabled={isLoading}
+              >
+                {isLoading ? "RETRYING..." : "RETRY"}
+              </button>
             </div>
           )}
 
