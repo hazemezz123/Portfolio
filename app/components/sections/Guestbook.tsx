@@ -3,19 +3,7 @@
 import { m, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabase";
-
-// Define the GuestbookEntry interface
-interface GuestbookEntry {
-  _id?: string;
-  id?: number;
-  name: string;
-  message: string;
-  email: string;
-  location?: string;
-  date?: string;
-  created_at?: string;
-  createdAt?: string;
-}
+import type { GuestbookEntry } from "../../lib/supabase";
 
 // Define a custom error interface to avoid using 'any'
 interface CustomError extends Error {
@@ -42,17 +30,25 @@ export default function Guestbook() {
     // Set current date safely on client-side only
     setCurrentDate(new Date().toISOString().split("T")[0]);
 
+    // Skip during SSR
+    if (typeof window === "undefined") return;
+
     const fetchEntries = async () => {
       setIsLoading(true);
       setError(null);
 
       try {
         // First try to get entries from the Supabase database
-        const { data, error: supabaseError } = await supabase
+        const response = await supabase
           .from("guestbook")
           .select("*")
           .order("created_at", { ascending: false })
           .limit(20);
+
+        const { data, error: supabaseError } = response || {
+          data: [],
+          error: null,
+        };
 
         if (supabaseError) {
           throw new Error(
@@ -62,7 +58,7 @@ export default function Guestbook() {
 
         // Map the data to our GuestbookEntry interface
         const formattedEntries =
-          data?.map((entry) => ({
+          data?.map((entry: any) => ({
             id: entry.id,
             name: entry.name,
             email: entry.email,

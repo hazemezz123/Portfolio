@@ -5,8 +5,13 @@ import Skills from "./components/sections/Skills";
 import Projects from "./components/sections/Projects";
 import Experience from "./components/sections/Experience";
 import Contact from "./components/sections/Contact";
-import Guestbook from "./components/sections/Guestbook";
 import Footer from "./components/ui/Footer";
+import dynamic from "next/dynamic";
+
+// Import Guestbook with SSR disabled
+const Guestbook = dynamic(() => import("./components/sections/Guestbook"), {
+  ssr: false,
+});
 
 export default function Home() {
   return (
