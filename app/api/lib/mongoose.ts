@@ -23,7 +23,6 @@ async function dbConnect() {
 
   // Skip MongoDB connection if no URI is provided
   if (!MONGODB_URI) {
-    console.warn("No MongoDB URI provided - skipping connection");
     return;
   }
 
@@ -36,7 +35,6 @@ async function dbConnect() {
   try {
     await mongoose.connect(MONGODB_URI);
     isConnected = true;
-    console.log("MongoDB connected successfully");
   } catch (error) {
     console.error("MongoDB connection error:", error);
   }

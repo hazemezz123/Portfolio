@@ -9,6 +9,12 @@ module.exports = {
         primary: "var(--primary)",
         secondary: "var(--secondary)",
         accent: "var(--accent)",
+        "retro-blue": "var(--retro-blue)",
+        "retro-purple": "var(--retro-purple)",
+        "retro-green": "var(--retro-green)",
+        "retro-yellow": "var(--retro-yellow)",
+        "retro-gray": "var(--retro-gray)",
+        "retro-beige": "var(--retro-beige)",
       },
       keyframes: {
         shimmer: {
@@ -25,9 +31,7 @@ module.exports = {
       },
     },
   },
-  plugins: [
-    // tailwindcss-animate will be loaded from plugin dependencies
-  ],
+  plugins: [],
   future: {
     hoverOnlyWhenSupported: true,
   },

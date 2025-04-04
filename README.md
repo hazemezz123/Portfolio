@@ -1,76 +1,120 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Retro Portfolio
 
-## Getting Started
+A retro-themed portfolio website built with Next.js, Tailwind CSS, and Framer Motion.
 
-First, run the development server:
+## Tech Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Framework**: [Next.js 15](https://nextjs.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+- **Database**: [MongoDB](https://www.mongodb.com/) (for Guestbook)
+- **Email**: [EmailJS](https://www.emailjs.com/) (for Contact Form)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## EmailJS Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+To set up the contact form with EmailJS:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Create an EmailJS account** at [EmailJS.com](https://www.emailjs.com/)
+2. **Create a new service** in your EmailJS dashboard (Gmail, Outlook, etc.)
+3. **Create an email template** with the following template variables:
+   - `{{from_name}}` - The name of the person sending the message
+   - `{{from_email}}` - The email address of the sender
+   - `{{message}}` - The message content
+4. **Get your credentials**:
+   - `Service ID` - Found in the EmailJS dashboard under "Email Services"
+   - `Template ID` - Found in your email template settings
+   - `Public Key` - Found in your EmailJS account settings
+5. **Update environment variables**:
+   - Add these to your `.env.local` file for local development:
+     ```
+     NEXT_PUBLIC_EMAILJS_SERVICE_ID=your_service_id
+     NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=your_template_id
+     NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=your_public_key
+     ```
+   - Add them to Vercel environment variables when deploying
 
 ## Deployment on Vercel
 
-The easiest way to deploy your Next.js app with backend API routes is to use [Vercel](https://vercel.com), the platform from the creators of Next.js.
+### Prerequisites
 
-### Deployment Steps
+- A [Vercel](https://vercel.com/) account
+- A [MongoDB](https://www.mongodb.com/) database
+- [EmailJS](https://www.emailjs.com/) credentials (for contact form)
 
-1. **Install Vercel CLI** (optional for command-line deployment)
+### Steps to Deploy
 
-   ```bash
-   npm i -g vercel
-   ```
+1. **Prepare your repository**
 
-2. **Login to Vercel**
+   - Make sure your code is in a Git repository
+   - Push your code to GitHub, GitLab, or Bitbucket
 
-   ```bash
-   vercel login
-   ```
+2. **Import your project to Vercel**
 
-3. **Set up environment variables**
+   - Go to [Vercel Dashboard](https://vercel.com/dashboard)
+   - Click "New Project"
+   - Select your repository
+   - Configure project settings
 
-   - Create a new project in the Vercel dashboard
-   - Go to your project settings → Environment Variables
-   - Add the required environment variables directly:
+3. **Environment Variables**
+
+   - Add the following environment variables in Vercel's project settings:
      - `MONGODB_URI`: Your MongoDB connection string
-     - `NEXT_PUBLIC_EMAILJS_SERVICE_ID`: EmailJS service ID
-     - `NEXT_PUBLIC_EMAILJS_TEMPLATE_ID`: EmailJS template ID
-     - `NEXT_PUBLIC_EMAILJS_PUBLIC_KEY`: EmailJS public key
+     - `NEXT_PUBLIC_EMAILJS_SERVICE_ID`: Your EmailJS service ID
+     - `NEXT_PUBLIC_EMAILJS_TEMPLATE_ID`: Your EmailJS template ID
+     - `NEXT_PUBLIC_EMAILJS_PUBLIC_KEY`: Your EmailJS public key
 
 4. **Deploy**
+   - Click "Deploy" and Vercel will build and deploy your project
+   - Once deployment is complete, you can visit your site at the provided URL
 
-   ```bash
-   # For local testing
-   vercel
+### Manual Deployment
 
-   # For production deployment
-   vercel --prod
-   ```
+If you prefer to deploy from your local machine, you can use the Vercel CLI:
 
-Alternatively, you can connect your GitHub repository to Vercel for automatic deployments.
+```bash
+# Install Vercel CLI globally
+npm i -g vercel
 
-### Important Notes
+# Login to your Vercel account
+vercel login
 
-- Make sure your MongoDB connection is configured properly with network access for Vercel's IP ranges.
-- Test your API routes locally with `npm run dev` before deploying.
-- Check the Vercel deployment logs if you encounter issues.
+# Deploy to preview
+vercel
+
+# Deploy to production
+vercel --prod
+```
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm run start
+```
+
+## Environment Variables
+
+Create a `.env.local` file in the root directory with the following variables:
+
+```
+# MongoDB Connection String (Required for Guestbook functionality)
+MONGODB_URI=your_mongodb_connection_string
+
+# EmailJS Configuration (Required for Contact form functionality)
+NEXT_PUBLIC_EMAILJS_SERVICE_ID=your_service_id
+NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=your_template_id
+NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=your_public_key
+```
+
+## License
+
+This project is licensed under the MIT License.

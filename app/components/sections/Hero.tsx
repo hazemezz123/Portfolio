@@ -1,10 +1,47 @@
 "use client";
 
-import { m } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
 import Link from "next/link";
+import Image from "next/image";
+import { useState, useEffect } from "react";
 
 export default function Hero() {
+  const [isImageHovered, setIsImageHovered] = useState(false);
+  const [clickEffect, setClickEffect] = useState(false);
+  const [clickCount, setClickCount] = useState(0);
+  const [tooltipMessage, setTooltipMessage] = useState("PLAYER 1 READY!");
+
+  // Different messages based on click count
+  useEffect(() => {
+    const messages = [
+      "PLAYER 1 READY!",
+      "HELLO THERE!",
+      "BONUS POINTS!",
+      "LEVEL UP!",
+      "ACHIEVEMENT UNLOCKED!",
+      "RETRO MODE ACTIVATED!",
+      "SAVE POINT REACHED!",
+      "SECRET CODE FOUND!",
+      "EXTRA LIFE!",
+      "YOU WIN!",
+    ];
+
+    if (clickCount > 0) {
+      const messageIndex = (clickCount - 1) % messages.length;
+      setTooltipMessage(messages[messageIndex]);
+    }
+  }, [clickCount]);
+
+  const handleImageClick = () => {
+    setClickEffect(true);
+    setClickCount((prevCount) => prevCount + 1);
+
+    setTimeout(() => {
+      setClickEffect(false);
+    }, 300);
+  };
+
   return (
     <section
       id="home"
@@ -102,15 +139,66 @@ export default function Hero() {
               transition={{ duration: 0.5, delay: 0.5 }}
               className="w-full md:w-1/2 flex justify-center"
             >
-              <div className="retro-container w-64 h-64 md:w-80 md:h-80 relative overflow-hidden">
-                <div className="absolute inset-4 bg-retro-gray flex items-center justify-center">
-                  <div className="text-center p-6">
-                    <div className="text-retro-beige text-6xl mb-4 font-mono">
-                      &lt;/&gt;
+              <div className="retro-container p-2 relative overflow-hidden">
+                <m.div
+                  className={`pixel-art-container relative cursor-pointer ${
+                    clickEffect ? "scale-95" : ""
+                  }`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ duration: 0.3 }}
+                  onMouseEnter={() => setIsImageHovered(true)}
+                  onMouseLeave={() => setIsImageHovered(false)}
+                  onClick={handleImageClick}
+                >
+                  <div
+                    className={`pixel-frame absolute -inset-1 bg-retro-purple ${
+                      clickEffect ? "animate-ping-once" : "animate-pulse-slow"
+                    }`}
+                  ></div>
+                  <Image
+                    src="/images/PixelArtImg.png"
+                    alt="Hazem Ezz Pixel Art"
+                    width={300}
+                    height={300}
+                    className="relative z-10 image-pixelated"
+                    style={{
+                      imageRendering: "pixelated",
+                      objectFit: "contain",
+                    }}
+                  />
+                  <div className="retro-glitch-effect"></div>
+
+                  {/* Score Counter */}
+                  {clickCount > 0 && (
+                    <div className="absolute top-2 right-2 z-40">
+                      <div className="retro-container bg-retro-gray px-2 py-1">
+                        <span className="font-mono text-retro-beige text-xs">
+                          SCORE: {clickCount * 100}
+                        </span>
+                      </div>
                     </div>
-                    <div className="text-retro-beige font-bold">RETRO DEV</div>
-                  </div>
-                </div>
+                  )}
+
+                  {/* Pixel Art Tooltip */}
+                  <AnimatePresence>
+                    {(isImageHovered || clickEffect) && (
+                      <m.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 5 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute -top-14 left-1/2 transform -translate-x-1/2 z-40"
+                      >
+                        <div className="retro-container bg-retro-purple px-3 py-2 text-sm whitespace-nowrap">
+                          <span className="font-mono text-white">
+                            {tooltipMessage}
+                          </span>
+                        </div>
+                      </m.div>
+                    )}
+                  </AnimatePresence>
+                </m.div>
               </div>
             </m.div>
           </div>

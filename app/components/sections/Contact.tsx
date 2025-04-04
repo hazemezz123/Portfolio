@@ -6,8 +6,8 @@ import emailjs from "@emailjs/browser";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
+    from_name: "",
+    from_email: "",
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -48,7 +48,7 @@ export default function Contact() {
       );
 
       setSubmitStatus("success");
-      setFormData({ name: "", email: "", message: "" });
+      setFormData({ from_name: "", from_email: "", message: "" });
     } catch (error) {
       console.error("Error sending email:", error);
       setSubmitStatus("error");
@@ -162,16 +162,16 @@ export default function Contact() {
             >
               <div className="mb-4">
                 <label
-                  htmlFor="name"
+                  htmlFor="from_name"
                   className="block text-retro-gray font-bold mb-2"
                 >
                   NAME
                 </label>
                 <input
                   type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
+                  id="from_name"
+                  name="from_name"
+                  value={formData.from_name}
                   onChange={handleChange}
                   required
                   className="retro-input w-full p-3 bg-retro-beige border-2 border-retro-gray text-retro-gray"
@@ -180,16 +180,16 @@ export default function Contact() {
 
               <div className="mb-4">
                 <label
-                  htmlFor="email"
+                  htmlFor="from_email"
                   className="block text-retro-gray font-bold mb-2"
                 >
                   EMAIL
                 </label>
                 <input
                   type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
+                  id="from_email"
+                  name="from_email"
+                  value={formData.from_email}
                   onChange={handleChange}
                   required
                   className="retro-input w-full p-3 bg-retro-beige border-2 border-retro-gray text-retro-gray"
@@ -226,9 +226,34 @@ export default function Contact() {
                 <m.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="mt-4 p-3 bg-retro-green text-white text-center"
+                  transition={{ duration: 0.3 }}
+                  className="mt-6 overflow-hidden"
                 >
-                  Message sent successfully!
+                  <div className="retro-container p-4 border-2 border-retro-green bg-black relative">
+                    <div className="scanline absolute inset-0 opacity-20 pointer-events-none"></div>
+                    <div className="text-center">
+                      <div className="text-retro-green font-mono font-bold text-lg mb-1">
+                        MESSAGE SENT!
+                      </div>
+                      <div className="text-retro-beige text-sm mb-2">
+                        Thank you for reaching out!
+                      </div>
+                      <div className="pixel-dots mx-auto w-16 h-1 bg-retro-green"></div>
+                      <m.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 260,
+                          damping: 20,
+                          delay: 0.3,
+                        }}
+                        className="mt-3 inline-block"
+                      >
+                        <div className="text-3xl">✓</div>
+                      </m.div>
+                    </div>
+                  </div>
                 </m.div>
               )}
 
@@ -236,9 +261,30 @@ export default function Contact() {
                 <m.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="mt-4 p-3 bg-red-500 text-white text-center"
+                  transition={{ duration: 0.3 }}
+                  className="mt-6 overflow-hidden"
                 >
-                  Failed to send message. Please try again.
+                  <div className="retro-container p-4 border-2 border-red-500 bg-black relative">
+                    <div className="scanline absolute inset-0 opacity-20 pointer-events-none"></div>
+                    <div className="text-center">
+                      <div className="text-red-500 font-mono font-bold text-lg mb-1">
+                        ERROR!
+                      </div>
+                      <div className="text-retro-beige text-sm mb-2">
+                        Message failed to send. Please try again.
+                      </div>
+                      <div className="pixel-dots mx-auto w-16 h-1 bg-red-500"></div>
+                      <m.div
+                        animate={{
+                          x: [-5, 5, -5, 5, -5, 5, -5, 5, 0],
+                          transition: { duration: 0.5, delay: 0.2 },
+                        }}
+                        className="mt-3 inline-block"
+                      >
+                        <div className="text-3xl">✗</div>
+                      </m.div>
+                    </div>
+                  </div>
                 </m.div>
               )}
             </form>

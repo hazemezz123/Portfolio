@@ -5,32 +5,25 @@ import { useState, useEffect } from "react";
 
 const experiences = [
   {
-    year: "2023 - Present",
+    year: "2024 - Present",
+    title: "Full-Stack Developer (MERN)",
+    company: "Freelancer",
+    description:
+      "Building high-performance web applications using React.js, Node.js, Express, and MongoDB. Implementing UI/UX animations with Framer Motion and optimizing website performance.",
+  },
+  {
+    year: "2023 - 2024",
     title: "Frontend Developer",
-    company: "TechCorp Inc.",
+    company: "Freelancer",
     description:
-      "Led development of multiple web applications using React and Next.js. Implemented modern UI/UX designs while maintaining retro-inspired themes.",
+      "Worked on various web projects, focusing on responsive design, React Router, and API integration. Developed e-commerce features and improved accessibility using Tailwind CSS.",
   },
   {
-    year: "2021 - 2023",
-    title: "Learing ",
-    company: "Digital Solutions Ltd.",
+    year: "2022 - 2023",
+    title: "Learning Web Development",
+    company: "Self-Learning",
     description:
-      "Worked on e-commerce projects with focus on responsive design and cross-browser compatibility. Integrated payment gateways and optimized site performance.",
-  },
-  {
-    year: "2019 - 2021",
-    title: "Junior Developer",
-    company: "Creative Studio",
-    description:
-      "Created and maintained websites for small businesses. Designed and implemented UI components using JavaScript and CSS frameworks.",
-  },
-  {
-    year: "2018 - 2019",
-    title: "Freelance Developer",
-    company: "Self-employed",
-    description:
-      "Designed and developed custom websites for clients. Specialized in WordPress themes and plugins customization.",
+      "Started learning HTML, CSS, and JavaScript. Built small projects to practice frontend development, including landing pages and interactive UI components.",
   },
 ];
 

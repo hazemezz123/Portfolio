@@ -1,6 +1,9 @@
 "use client";
 
 import { m } from "framer-motion";
+import Image from "next/image";
+import Link from "next/link";
+import SocialTooltip from "./SocialTooltip";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -23,8 +26,118 @@ export default function Footer() {
             </p>
           </div>
 
+          {/* Social Media Icons */}
+          <m.div
+            className="flex space-x-4 my-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ staggerChildren: 0.1, delayChildren: 0.3 }}
+          >
+            <m.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.3 }}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              className="retro-container p-1 cursor-pointer"
+            >
+              <SocialTooltip label="GitHub">
+                <Link
+                  href="https://github.com/hazemezz123"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub"
+                >
+                  <Image
+                    src="/icons/github-retro.svg"
+                    alt="GitHub"
+                    width={32}
+                    height={32}
+                    className="pixelated"
+                  />
+                </Link>
+              </SocialTooltip>
+            </m.div>
+            <m.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.3 }}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              className="retro-container p-1 cursor-pointer"
+            >
+              <SocialTooltip label="LinkedIn">
+                <Link
+                  href="https://www.linkedin.com/in/hazem-ezz-424498285/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="LinkedIn"
+                >
+                  <Image
+                    src="/icons/linkedin-retro.svg"
+                    alt="LinkedIn"
+                    width={32}
+                    height={32}
+                    className="pixelated"
+                  />
+                </Link>
+              </SocialTooltip>
+            </m.div>
+            <m.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.3 }}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              className="retro-container p-1 cursor-pointer"
+            >
+              <SocialTooltip label="Instagram">
+                <Link
+                  href="https://www.instagram.com/hazem_ezz_1/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram"
+                >
+                  <Image
+                    src="/icons/instagram-retro.svg"
+                    alt="Instagram"
+                    width={32}
+                    height={32}
+                    className="pixelated"
+                  />
+                </Link>
+              </SocialTooltip>
+            </m.div>
+            <m.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.3 }}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              className="retro-container p-1 cursor-pointer"
+            >
+              <SocialTooltip label="Facebook">
+                <Link
+                  href="https://www.facebook.com/profile.php?id=61557867570271"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Facebook"
+                >
+                  <Image
+                    src="/icons/facebook-retro.svg"
+                    alt="Facebook"
+                    width={32}
+                    height={32}
+                    className="pixelated"
+                  />
+                </Link>
+              </SocialTooltip>
+            </m.div>
+          </m.div>
+
           <p className="text-retro-gray text-sm mt-6 font-mono">
-            &copy; {currentYear} · MADE WITH HTML, CSS, AND JAVASCRIPT
+            &copy; {currentYear} · MADE WITH Next.js, Tailwind CSS, and
+            TypeScript
           </p>
         </m.div>
       </div>
