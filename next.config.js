@@ -6,7 +6,9 @@ const nextConfig = {
     formats: ["image/avif", "image/webp"],
   },
   experimental: {
-    serverActions: true,
+    serverActions: {
+      allowedOrigins: ["localhost:3000", "hazemdev.vercel.app"],
+    },
   },
 };
 

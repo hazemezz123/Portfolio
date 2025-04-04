@@ -14,6 +14,12 @@ interface GuestbookEntry {
   createdAt: string;
 }
 
+// Define a custom error interface to avoid using 'any'
+interface CustomError extends Error {
+  name: string;
+  message: string;
+}
+
 export default function Guestbook() {
   const [entries, setEntries] = useState<GuestbookEntry[]>([]);
   const [formData, setFormData] = useState({
@@ -62,11 +68,14 @@ export default function Guestbook() {
         } else {
           setEntries(data.entries || []);
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error("Error fetching guestbook entries:", error);
 
+        // Cast to CustomError type for type-safe access
+        const err = error as CustomError;
+
         // Different error message for abort/timeout
-        if (error.name === "AbortError") {
+        if (err.name === "AbortError") {
           setError("Request timed out. The server took too long to respond.");
         } else {
           setError("Failed to load guestbook entries. Please try again later.");

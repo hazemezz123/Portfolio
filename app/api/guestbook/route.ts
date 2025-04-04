@@ -16,6 +16,12 @@ const withTimeout = <T>(promise: Promise<T>, timeoutMs = 5000): Promise<T> => {
   });
 };
 
+// Define Error interface to avoid using 'any'
+interface CustomError extends Error {
+  message: string;
+  name: string;
+}
+
 // GET /api/guestbook - Get all guestbook entries
 export async function GET() {
   try {
@@ -29,12 +35,15 @@ export async function GET() {
     );
 
     return NextResponse.json({ entries }, { status: 200 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Failed to fetch guestbook entries:", error);
+
+    // Cast error to CustomError type
+    const err = error as CustomError;
 
     // Return a more specific error message based on the error
     const errorMessage =
-      error.message === "Operation timed out"
+      err.message === "Operation timed out"
         ? "Database connection timed out. Please try again later."
         : "Failed to fetch guestbook entries";
 
@@ -83,12 +92,15 @@ export async function POST(request: NextRequest) {
       { message: "Guestbook entry added successfully", entry: newEntry },
       { status: 201 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Failed to add guestbook entry:", error);
+
+    // Cast error to CustomError type
+    const err = error as CustomError;
 
     // Return a more specific error message based on the error
     const errorMessage =
-      error.message === "Operation timed out"
+      err.message === "Operation timed out"
         ? "Database operation timed out. Please try again later."
         : "Failed to add guestbook entry";
 
