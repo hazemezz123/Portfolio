@@ -44,7 +44,7 @@ export default function About() {
                         <div>EDUCATION:</div>
                       </div>
                       <div className="text-right">
-                        <div>HAZEM EZZ</div>
+                        <div>HAZEM </div>
                         <div>PROGRAMMER</div>
                         <div>18</div>
                         <div>GRADE 12</div>

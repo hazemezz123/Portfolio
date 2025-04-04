@@ -216,10 +216,7 @@ export default function Hero() {
 
                   {/* Click instruction label */}
                   <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 z-40">
-                    <div
-                      className="retro-container bg-retro-gray px-1 py-0.5 text-center"
-                      style={{ minWidth: "auto" }}
-                    >
+                    <div className="retro-container bg-retro-gray px-1 py-0.5">
                       <span className="font-mono text-retro-beige text-[10px]">
                         CLICK TO CHANGE
                       </span>
