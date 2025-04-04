@@ -2,16 +2,19 @@
 
 import { m, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
+import { supabase, GuestbookEntry as SupabaseEntry } from "../../lib/supabase";
 
 // Define the GuestbookEntry interface
 interface GuestbookEntry {
-  _id: string;
+  _id?: string;
+  id?: number;
   name: string;
   message: string;
   email: string;
   location?: string;
-  date: string;
-  createdAt: string;
+  date?: string;
+  created_at?: string;
+  createdAt?: string;
 }
 
 // Define a custom error interface to avoid using 'any'
@@ -44,43 +47,38 @@ export default function Guestbook() {
       setError(null);
 
       try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000);
+        // First try to get entries from the Supabase database
+        const { data, error: supabaseError } = await supabase
+          .from("guestbook")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(20);
 
-        const response = await fetch("/api/guestbook", {
-          signal: controller.signal,
-        });
-
-        clearTimeout(timeoutId);
-
-        if (!response.ok && response.status !== 200) {
-          throw new Error("Failed to fetch guestbook entries");
-        }
-
-        const data = await response.json();
-
-        if (data.connectionIssue) {
-          setError(
-            data.error ||
-              "There was an issue connecting to the database. Please try again later."
+        if (supabaseError) {
+          throw new Error(
+            "Error fetching from Supabase: " + supabaseError.message
           );
-          setEntries([]);
-        } else {
-          setEntries(data.entries || []);
         }
+
+        // Map the data to our GuestbookEntry interface
+        const formattedEntries =
+          data?.map((entry) => ({
+            id: entry.id,
+            name: entry.name,
+            email: entry.email,
+            message: entry.message,
+            location: entry.location,
+            created_at: entry.created_at,
+          })) || [];
+
+        setEntries(formattedEntries);
       } catch (error: unknown) {
         console.error("Error fetching guestbook entries:", error);
 
         // Cast to CustomError type for type-safe access
         const err = error as CustomError;
 
-        // Different error message for abort/timeout
-        if (err.name === "AbortError") {
-          setError("Request timed out. The server took too long to respond.");
-        } else {
-          setError("Failed to load guestbook entries. Please try again later.");
-        }
-
+        setError(`Failed to load guestbook entries: ${err.message}`);
         setEntries([]);
       } finally {
         setIsLoading(false);
@@ -95,23 +93,31 @@ export default function Guestbook() {
     setIsLoading(true);
     setError(null);
 
-    fetch("/api/guestbook")
-      .then((response) => {
-        if (!response.ok && response.status !== 200) {
-          throw new Error("Failed to fetch guestbook entries");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data.connectionIssue) {
-          setError(
-            data.error ||
-              "There was an issue connecting to the database. Please try again later."
+    // Call Supabase directly
+    supabase
+      .from("guestbook")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(20)
+      .then(({ data, error: supabaseError }) => {
+        if (supabaseError) {
+          throw new Error(
+            "Error fetching from Supabase: " + supabaseError.message
           );
-          setEntries([]);
-        } else {
-          setEntries(data.entries || []);
         }
+
+        // Map the data to our GuestbookEntry interface
+        const formattedEntries =
+          data?.map((entry) => ({
+            id: entry.id,
+            name: entry.name,
+            email: entry.email,
+            message: entry.message,
+            location: entry.location,
+            created_at: entry.created_at,
+          })) || [];
+
+        setEntries(formattedEntries);
       })
       .catch((error) => {
         console.error("Error retrying guestbook fetch:", error);
@@ -138,23 +144,43 @@ export default function Guestbook() {
     setError(null);
 
     try {
-      const response = await fetch("/api/guestbook", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      // Insert the new entry into Supabase
+      const { data, error: insertError } = await supabase
+        .from("guestbook")
+        .insert([
+          {
+            name: formData.name,
+            email: formData.email,
+            message: formData.message,
+            location: formData.location || "",
+            // Supabase will automatically set created_at
+          },
+        ])
+        .select();
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to add guestbook entry");
+      if (insertError) {
+        throw new Error("Error adding entry: " + insertError.message);
       }
 
-      const data = await response.json();
+      // Get the inserted entry
+      const newEntry = data?.[0];
+
+      if (!newEntry) {
+        throw new Error("Failed to retrieve the new entry");
+      }
 
       // Add the new entry to the entries array
-      setEntries([data.entry, ...entries]);
+      setEntries([
+        {
+          id: newEntry.id,
+          name: newEntry.name,
+          email: newEntry.email,
+          message: newEntry.message,
+          location: newEntry.location,
+          created_at: newEntry.created_at,
+        },
+        ...entries,
+      ]);
 
       // Reset the form
       setFormData({ name: "", message: "", location: "", email: "" });
@@ -172,7 +198,8 @@ export default function Guestbook() {
   };
 
   // Format date to a readable string
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return "";
     const date = new Date(dateString);
     return date.toISOString().split("T")[0];
   };
@@ -326,62 +353,39 @@ export default function Guestbook() {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {entries.map((entry, index) => (
-                <m.div
-                  key={entry._id}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
-                  className="retro-container p-0 overflow-hidden"
+            <div className="space-y-6">
+              {entries.map((entry) => (
+                <div
+                  key={entry.id || entry._id}
+                  className="retro-container bg-retro-beige p-4 border-2 border-black"
                 >
-                  <div className="bg-black p-2 flex items-center">
-                    <div className="h-3 w-3 rounded-full bg-white mr-2"></div>
-                    <div className="text-white font-mono text-sm">
-                      ENTRY #{index + 1}
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="text-lg font-bold mb-1">{entry.name}</h3>
+                      {entry.location && (
+                        <p className="text-xs text-retro-gray mb-2">
+                          from {entry.location}
+                        </p>
+                      )}
                     </div>
-                    <div className="text-retro-beige ml-auto text-xs">
-                      {formatDate(entry.date || entry.createdAt)}
-                    </div>
+                    <p className="text-xs text-retro-blue">
+                      {formatDate(
+                        entry.created_at || entry.createdAt || entry.date
+                      )}
+                    </p>
                   </div>
-
-                  <div className="p-4 bg-retro-beige">
-                    <div className="flex items-center mb-3">
-                      <div className="w-6 h-6 bg-black text-white font-bold flex items-center justify-center mr-2">
-                        {entry.name.charAt(0).toUpperCase()}
-                      </div>
-                      <div>
-                        <div className="font-bold text-black">{entry.name}</div>
-                        <div className="text-xs text-black">
-                          {entry.location}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="border-t border-b border-dotted border-black py-3 my-2">
-                      <p className="text-sm text-black">{entry.message}</p>
-                    </div>
-
-                    <div className="text-xs text-black mt-2 font-mono">
-                      {entry.email}
-                    </div>
-                  </div>
-                </m.div>
+                  <p className="text-sm mt-2">{entry.message}</p>
+                </div>
               ))}
+
+              <div className="text-center text-xs text-retro-gray pt-4">
+                <p>
+                  [Pages]: 1 of 1 | [Entries]: {entries.length} | [Last
+                  Updated]: {currentDate}
+                </p>
+              </div>
             </div>
           )}
-
-          <div className="mt-8 text-center">
-            <div className="text-xs font-mono text-black">
-              <span className="font-bold">[Pages]:</span> 1 of 1 |{" "}
-              <span className="font-bold">[Entries]:</span> {entries.length} |{" "}
-              <span className="font-bold">[Last Updated]:</span>{" "}
-              {entries.length > 0
-                ? formatDate(entries[0].createdAt || entries[0].date)
-                : currentDate || ""}
-            </div>
-          </div>
         </div>
       </div>
     </section>
