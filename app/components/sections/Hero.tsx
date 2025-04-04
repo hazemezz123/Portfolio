@@ -9,34 +9,39 @@ import { useState, useEffect } from "react";
 export default function Hero() {
   const [isImageHovered, setIsImageHovered] = useState(false);
   const [clickEffect, setClickEffect] = useState(false);
-  const [clickCount, setClickCount] = useState(0);
-  const [tooltipMessage, setTooltipMessage] = useState("PLAYER 1 READY!");
+  const [showRealImage, setShowRealImage] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
-  // Different messages based on click count
+  // Transition from pixel art to real photo after 5 seconds
   useEffect(() => {
-    const messages = [
-      "PLAYER 1 READY!",
-      "HELLO THERE!",
-      "BONUS POINTS!",
-      "LEVEL UP!",
-      "ACHIEVEMENT UNLOCKED!",
-      "RETRO MODE ACTIVATED!",
-      "SAVE POINT REACHED!",
-      "SECRET CODE FOUND!",
-      "EXTRA LIFE!",
-      "YOU WIN!",
-    ];
+    const timer = setTimeout(() => {
+      setIsTransitioning(true);
 
-    if (clickCount > 0) {
-      const messageIndex = (clickCount - 1) % messages.length;
-      setTooltipMessage(messages[messageIndex]);
-    }
-  }, [clickCount]);
+      // After transition starts, show real image
+      setTimeout(() => {
+        setShowRealImage(true);
+      }, 500);
+
+      // After full transition, set transitioning to false
+      setTimeout(() => {
+        setIsTransitioning(false);
+      }, 2000);
+    }, 5000); // Wait 5 seconds before starting transition
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleImageClick = () => {
-    setClickEffect(true);
-    setClickCount((prevCount) => prevCount + 1);
+    // Toggle between real image and pixel art
+    if (!isTransitioning) {
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setShowRealImage((prev) => !prev);
+        setIsTransitioning(false);
+      }, 1000);
+    }
 
+    setClickEffect(true);
     setTimeout(() => {
       setClickEffect(false);
     }, 300);
@@ -143,7 +148,7 @@ export default function Hero() {
                 <m.div
                   className={`pixel-art-container relative cursor-pointer ${
                     clickEffect ? "scale-95" : ""
-                  }`}
+                  } ${isTransitioning ? "glitch-effect" : ""}`}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   transition={{ duration: 0.3 }}
@@ -156,31 +161,72 @@ export default function Hero() {
                       clickEffect ? "animate-ping-once" : "animate-pulse-slow"
                     }`}
                   ></div>
-                  <Image
-                    src="/images/PixelArtImg.png"
-                    alt="Hazem Ezz Pixel Art"
-                    width={300}
-                    height={300}
-                    className="relative z-10 image-pixelated"
-                    style={{
-                      imageRendering: "pixelated",
-                      objectFit: "contain",
-                    }}
-                  />
+
+                  <AnimatePresence mode="wait">
+                    {showRealImage ? (
+                      <m.div
+                        key="real-image"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="relative z-10"
+                      >
+                        <Image
+                          src="/images/Hazem.jpg"
+                          alt="Hazem Ezz"
+                          width={400}
+                          height={400}
+                          className="relative z-10 real-photo object-cover"
+                          style={{
+                            width: "auto",
+                            height: "400px",
+                            objectFit: "cover",
+                            objectPosition: "center",
+                          }}
+                        />
+                      </m.div>
+                    ) : (
+                      <m.div
+                        key="pixel-image"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="relative z-10"
+                      >
+                        <Image
+                          src="/images/PixelArtImg.png"
+                          alt="Hazem Ezz Pixel Art"
+                          width={400}
+                          height={400}
+                          className="relative z-10 image-pixelated"
+                          style={{
+                            width: "auto",
+                            height: "400px",
+                            imageRendering: "pixelated",
+                            objectFit: "contain",
+                          }}
+                        />
+                      </m.div>
+                    )}
+                  </AnimatePresence>
+
                   <div className="retro-glitch-effect"></div>
 
-                  {/* Score Counter */}
-                  {clickCount > 0 && (
-                    <div className="absolute top-2 right-2 z-40">
-                      <div className="retro-container bg-retro-gray px-2 py-1">
-                        <span className="font-mono text-retro-beige text-xs">
-                          SCORE: {clickCount * 100}
-                        </span>
-                      </div>
+                  {/* Click instruction label */}
+                  <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 z-40">
+                    <div
+                      className="retro-container bg-retro-gray px-1 py-0.5 text-center"
+                      style={{ minWidth: "auto" }}
+                    >
+                      <span className="font-mono text-retro-beige text-[10px]">
+                        CLICK TO CHANGE
+                      </span>
                     </div>
-                  )}
+                  </div>
 
-                  {/* Pixel Art Tooltip */}
+                  {/* Tooltip */}
                   <AnimatePresence>
                     {(isImageHovered || clickEffect) && (
                       <m.div
@@ -192,7 +238,7 @@ export default function Hero() {
                       >
                         <div className="retro-container bg-retro-purple px-3 py-2 text-sm whitespace-nowrap">
                           <span className="font-mono text-white">
-                            {tooltipMessage}
+                            {showRealImage ? "REALITY MODE!" : "PIXEL MODE!"}
                           </span>
                         </div>
                       </m.div>
