@@ -78,26 +78,6 @@ const SkillItem = memo(({ skill, index }: { skill: Skill; index: number }) => {
         {skill.icon}
       </div>
       <h3 className="font-bold mb-2 text-base">{skill.name}</h3>
-
-      {/* Mini progress bar with retro style */}
-      <div className="w-full relative">
-        {/* Shadow effect */}
-        <div className="absolute -bottom-1 -right-1 w-full h-3 bg-black opacity-40"></div>
-
-        {/* Progress bar container */}
-        <div className="relative border-2 border-black bg-white">
-          <div className="w-full h-3 bg-black">
-            <m.div
-              initial={{ width: 0 }}
-              animate={{ width: `${skill.level}%` }}
-              className="h-full bg-white"
-              transition={{ duration: 0.7, delay: index * 0.05 }}
-            />
-          </div>
-        </div>
-      </div>
-
-      <div className="text-xs mt-2 font-mono">{skill.level}%</div>
     </m.div>
   );
 });
