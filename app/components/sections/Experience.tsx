@@ -185,7 +185,11 @@ export default function Experience() {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="mt-16 text-center"
         >
-          <div className="hidden md:inline-block retro-container mx-auto">
+          <a
+            href="/Hazem-cv.pdf"
+            download="Hazem-cv.pdf"
+            className="hidden md:inline-block retro-container mx-auto cursor-pointer"
+          >
             <div className="font-mono">
               <div className="mb-2">
                 &gt; <span className="text-retro-blue">resume.exe</span>
@@ -194,10 +198,14 @@ export default function Experience() {
                 Download my full resume
               </div>
             </div>
-          </div>
+          </a>
 
           {/* Mobile version of resume button without retro container */}
-          <div className="md:hidden inline-block mx-auto">
+          <a
+            href="/Hazem-cv.pdf"
+            download="Hazem-cv.pdf"
+            className="md:hidden inline-block mx-auto cursor-pointer"
+          >
             <div className="font-mono">
               <div className="mb-2">
                 <span className="text-retro-blue">resume.exe</span>
@@ -206,7 +214,7 @@ export default function Experience() {
                 Download my full resume
               </div>
             </div>
-          </div>
+          </a>
         </m.div>
       </div>
     </section>
