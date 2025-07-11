@@ -61,59 +61,91 @@ const skillCategories: SkillCategory[] = [
 ];
 
 // Memoized skill item to prevent unnecessary re-renders
-const SkillItem = memo(({ skill, index }: { skill: Skill; index: number }) => (
-  <m.div
-    key={skill.name}
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.3, delay: index * 0.05 }} // Reduced delay for faster rendering
-    className="retro-container p-4 flex flex-col items-center text-center"
-  >
-    <div className="text-4xl mb-2" role="img" aria-label={`${skill.name} icon`}>
-      {skill.icon}
-    </div>
-    <h3 className="font-bold mb-1 text-base">{skill.name}</h3>
-  </m.div>
-));
+const SkillItem = memo(({ skill, index }: { skill: Skill; index: number }) => {
+  return (
+    <m.div
+      key={skill.name}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: index * 0.05 }}
+      className="retro-container p-4 flex flex-col items-center text-center"
+    >
+      <div
+        className="text-4xl mb-2"
+        role="img"
+        aria-label={`${skill.name} icon`}
+      >
+        {skill.icon}
+      </div>
+      <h3 className="font-bold mb-2 text-base">{skill.name}</h3>
+
+      {/* Mini progress bar with retro style */}
+      <div className="w-full relative">
+        {/* Shadow effect */}
+        <div className="absolute -bottom-1 -right-1 w-full h-3 bg-black opacity-40"></div>
+
+        {/* Progress bar container */}
+        <div className="relative border-2 border-black bg-white">
+          <div className="w-full h-3 bg-black">
+            <m.div
+              initial={{ width: 0 }}
+              animate={{ width: `${skill.level}%` }}
+              className="h-full bg-white"
+              transition={{ duration: 0.7, delay: index * 0.05 }}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="text-xs mt-2 font-mono">{skill.level}%</div>
+    </m.div>
+  );
+});
 SkillItem.displayName = "SkillItem";
 
 // Memoized skill bar to prevent unnecessary re-renders
-const SkillBar = memo(({ skill }: { skill: Skill }) => (
-  <div key={skill.name} className="retro-container p-0">
-    <div className="flex justify-between items-center bg-retro-gray p-2 text-white">
-      <div className="flex items-center">
-        <span className="mr-2 text-xl">{skill.icon}</span>
-        <span className="font-mono text-black bg-retro-beige px-2">
-          {skill.name}
+const SkillBar = memo(({ skill }: { skill: Skill }) => {
+  return (
+    <div key={skill.name} className="mb-10">
+      {/* Skill header with name and percentage */}
+      <div className="bg-retro-gray text-white font-bold py-2 px-2 flex justify-between items-center">
+        <div className="flex items-center gap-2">
+          <span className="text-xl ml-1">{skill.icon}</span>
+          <span className="bg-retro-beige text-black px-2 py-0.5 ">
+            {skill.name}
+          </span>
+        </div>
+        <span className="bg-black text-white px-2 py-0.5 font-mono text-sm mr-1">
+          {skill.level}%
         </span>
       </div>
-      <span className="font-mono text-sm bg-black px-2 py-1">
-        {skill.level}%
-      </span>
-    </div>
-    <div className="w-full h-8 retro-container p-0 overflow-hidden bg-black">
-      <m.div
-        initial={{ width: 0 }}
-        animate={{ width: `${skill.level}%` }}
-        className="h-full"
-        style={{
-          background: "white",
-          willChange: "width", // Optimize for animation
-        }}
-        transition={{
-          duration: 1, // Reduced duration for faster rendering
-          bounce: 0.3, // Reduced bounce for better performance
-          type: "spring",
-        }}
-      />
-      <div className="absolute top-0 left-0 h-full w-full grid grid-cols-10">
-        {Array.from({ length: 10 }).map((_, i) => (
-          <div key={i} className="h-full border-r border-black" />
-        ))}
+
+      {/* The main progress bar container with 3D effect */}
+      <div className="relative">
+        {/* Shadow effect for 3D look */}
+        <div className="absolute -bottom-3 -right-3 w-full h-10 bg-black opacity-40"></div>
+
+        {/* Main bar container */}
+        <div className="relative w-full bg-white border-2 border-black overflow-hidden">
+          {/* Progress bar */}
+          <div className="w-full h-10 bg-black">
+            <m.div
+              initial={{ width: 0 }}
+              animate={{ width: `${skill.level}%` }}
+              className="h-full bg-white"
+              style={{ willChange: "width" }}
+              transition={{
+                duration: 1,
+                bounce: 0.3,
+                type: "spring",
+              }}
+            />
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-));
+  );
+});
 SkillBar.displayName = "SkillBar";
 
 // Memoized category button to prevent unnecessary re-renders

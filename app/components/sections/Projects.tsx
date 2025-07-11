@@ -50,6 +50,15 @@ const projects = [
     codeUrl: "https://github.com/hazemezz123/Python-oppSkills",
     image: "/projects/superhero.webp",
   },
+  {
+    id: 5,
+    title: "Superhero Battle Simulator",
+    description:
+      "An interactive Python GUI application that simulates battles between superheroes and villains with real-time health bars, battle logs, and persistent data storage.",
+    tags: ["Python", "OOP", "Tkinter", "GUI", "Data Persistence"],
+    codeUrl: "https://github.com/hazemezz123/Python-oppSkills",
+    image: "/projects/superhero.webp",
+  },
 ];
 
 export default function Projects() {
